@@ -8,8 +8,7 @@
   padding: 50px;
   box-sizing: border-box;
 }
-  .text {
-    text-align: center;
-    color: #69b8d1;
-    font-weight: bold;
-  }
+div {
+  color: #003366;
+  font-family: KaiTi;
+}
