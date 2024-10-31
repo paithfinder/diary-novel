@@ -20,6 +20,9 @@ importers:
       less:
         specifier: ^4.2.0
         version: 4.2.0
+      lib-flexible:
+        specifier: ^0.3.2
+        version: 0.3.2
       particles.js:
         specifier: ^2.0.0
         version: 2.0.0
@@ -1367,6 +1370,9 @@ packages:
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
+
+  lib-flexible@0.3.2:
+    resolution: {integrity: sha512-9yowMWA70tKhKdCJDaltY0mNQG4OWo7pWKScnTp9aiSxS7s20ZYlwBRE3335nweOf5qKXVC7sDxJwMPM8/MFZg==}
 
   lilconfig@3.1.2:
     resolution: {integrity: sha512-eop+wDAvpItUys0FWkHIKeC9ybYrTGbU41U5K7+bttZZeohvnY7M9dZ5kB21GNWiFT2q1OoPTvncPCgSOVO5ow==}
@@ -3404,6 +3410,8 @@ snapshots:
     dependencies:
       prelude-ls: 1.2.1
       type-check: 0.4.0
+
+  lib-flexible@0.3.2: {}
 
   lilconfig@3.1.2: {}
 

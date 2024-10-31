@@ -20,6 +20,7 @@
     "@vueup/vue-quill": "1.0.0-alpha.40",
     "axios": "^1.7.7",
     "less": "^4.2.0",
+    "lib-flexible": "^0.3.2",
     "particles.js": "^2.0.0",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^4.0.0",
