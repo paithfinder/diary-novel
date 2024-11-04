@@ -10,6 +10,7 @@ declare module 'vue' {
     AddBox: typeof import('./src/components/addBox.vue')['default']
     Chapter: typeof import('./src/components/chapter.vue')['default']
     DateBox: typeof import('./src/components/dateBox.vue')['default']
+    LoginForm: typeof import('./src/components/loginForm.vue')['default']
     MyItem: typeof import('./src/components/myItem.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref,computed,watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/modules/user'
+import type { FormInstance } from 'vant';
 const userStore = useUserStore()
 const route = useRoute()
 // 接收注册信息上一个路由页面传过来的参数
@@ -10,6 +11,8 @@ const router = useRouter()
 const username = ref<string>('')
 const password = ref<string>('')
 const checked = ref<boolean>(true)
+const formRef = ref<FormInstance>()
+
 const onSubmit = (values: Object) => {
   console.log('submit', values)
 }
@@ -37,36 +40,94 @@ const goMsg = () => {
 const resetPd = () => {
   router.push('/forgetPd')
 }
+let loginType=ref('1')
+let contentImg = computed(() => {
+  return `url(${new URL('../../assets/Login/login_content_0' + loginType.value + '_bg.png', import.meta.url).href})`;
+});
+let loginPd=ref(true)
 
+const changeLoginType=()=>{
+  loginType.value=loginType.value==='1'?'2':'1'
+  loginPd.value = !loginPd.value
+  formRef.value?.resetValidation()
+}
+
+
+let eyeType=ref('closed')
+let eyeIcon=computed(()=>{
+  return `${new URL(`/src/icons/Login/login_password_${eyeType.value}.png`, import.meta.url).href}`;
+})
+const changeEyeType=()=>{
+  eyeType.value=eyeType.value==='closed'?'open':'closed'
+  pdType.value=pdType.value==='password'?'text':'password'
+
+}
+import {GetLoginCode,phoneVertify } from '@/utils/api';
+const verification = ref<string>('')
+const phone = ref<string>('')
+  const reverseN = ref<number>(3)
+  let reciprocal: any = null
+const sendCode = async (event: any) => {
+  event.target.disabled = true
+  const res = await phoneVertify(phone.value)
+  console.log(res, '我是手机号码验证的结果')
+  if (res.success) {
+    reciprocal = setInterval(() => {
+      reverseN.value--
+      if (reverseN.value < 0) {
+        clearInterval(reciprocal)
+        event.target.disabled = false
+        reverseN.value = 3
+      }
+    }, 1000)
+    console.log(event.target.innerText)
+      let res=await GetLoginCode(
+      phone.value
+    )
+    console.log(res, '我是登录验证码')
+    
+  } else {
+    showToast(`${res.errorMsg}`)
+    event.target.disabled = false
+  }
+
+}
+const pdType=ref('password')
 </script>
 
 <template>
   <div class="wrap">
     <div class="title">
-      <!-- <h2>密码登录</h2>
-      <div class="title" @click="goMsg">
-        短信验证码登录
-        <img src="@/icons/Login/箭头.png" alt="" class="icon" />
-      </div> -->
       <div @click="toRegister">注册</div>
     </div>
     <div class="logo">
       <img src="@/assets/Login/logo.png" alt="" />
 
     </div>
-    <div class="form">
+    <div class="form" >
       <div class="loginWay">
-        <div>账号登录</div>
-        <div>验证码登录</div>
+        <div @click="changeLoginType" :class="{highLightFont:loginPd}">账号登录</div>
+        <div @click="changeLoginType" :class="{highLightFont:!loginPd}">验证码登录</div>
       </div>
-      <van-form @submit="onSubmit">
-        <van-cell-group inset>
-          <van-field v-model="username" name="name" placeholder="请输入账号"
+      <van-form @submit="onSubmit" ref="formRef">
+        <van-cell-group inset v-show="loginPd">
+          <van-field v-model="username" name="name" placeholder='请输入账号'
             :rules="[{ required: true, message: '账号为空！' }]" />
-          <van-field v-model="password" type="password" name="password" placeholder="请输入密码"
-            :rules="[{ required: true, message: '密码为空！' }]" />
+          <van-field v-model="password" :type="pdType" name="password" placeholder='请输入密码'
+            :rules="[{ required: true, message: '密码为空！'}]" />
         </van-cell-group>
-        <img src="/src/icons/Login/login_password_closed.png" alt="" id="eye">
+        <van-cell-group inset v-show="!loginPd">
+          <van-field v-model="phone" name="phone" placeholder='请输入手机号码'
+            :rules="[{ required: true, message: '手机号码为空！' }]" />
+          <van-field v-model="verification"  name="verification" placeholder='请输入验证码'
+            :rules="[{ required: true, message: '验证码为空！'}]" />
+        </van-cell-group>
+        <img :src="eyeIcon" alt="" id="eye" v-show="loginPd" @click="changeEyeType">
+        <div id="code" v-show="!loginPd"    @click="sendCode"> {{
+              reverseN < 3 && reverseN > -1
+                ? `${reverseN + 1}s后自动获取`
+                : '获取验证码'
+            }}</div>
         <van-checkbox v-model="checked"  style="margin-top: 10px" icon-size="12px">
           <div  class="contact">
             我已阅读<span class="text"><a>《用户协议》</a></span> 及
@@ -81,7 +142,7 @@ const resetPd = () => {
         </div>
             <div class="help">
 
-      <div @click="resetPd"  id="forgetPd">忘记密码？</div>
+      <div @click="resetPd"  id="forgetPd" v-show="loginPd">忘记密码？</div>
     </div>
       </van-form>
     </div>
@@ -179,7 +240,8 @@ const resetPd = () => {
   }
 }
 .form{
-  background: url('@/assets/Login/login_content_01_bg.png') no-repeat;
+  background-image: v-bind(contentImg);
+  background-repeat:  no-repeat;
   background-size: cover;
   background-position: center;
   border-radius: 15px !important;
@@ -236,6 +298,19 @@ width:80%;
   top:25%;
   right:0;
 }
+#code{
+  position:absolute;
+  top:22.5%;
+  right:0;
+  background-color: 
+  #F9D840;
+  width:160px;
+  height:40px;
+  text-align: center;
+  line-height: 40px;
+  border-radius: 25px;
+
+}
 .contact{
   font-size:12px;
 
@@ -262,5 +337,7 @@ width:80%;
 border:none !important;
 font-weight: bold;
 }
-
+.highLightFont{
+  font-weight: bold;
+}
 </style>
