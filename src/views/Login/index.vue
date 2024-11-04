@@ -125,7 +125,7 @@ const pdType=ref('password')
         <img :src="eyeIcon" alt="" id="eye" v-show="loginPd" @click="changeEyeType">
         <div id="code" v-show="!loginPd"    @click="sendCode"> {{
               reverseN < 3 && reverseN > -1
-                ? `${reverseN + 1}s后自动获取`
+                ? `${reverseN + 1}s之后自动获取`
                 : '获取验证码'
             }}</div>
         <van-checkbox v-model="checked"  style="margin-top: 10px" icon-size="12px">
