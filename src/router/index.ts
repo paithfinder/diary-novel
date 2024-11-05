@@ -26,19 +26,21 @@ const routes: Array<RouteRecordRaw> = [
     name: 'login'
   },
   {
-    path: '/register',
-    component: () => import('@/views/Register/index.vue'),
-    name: 'register'
+    path: '/register_step1',
+    component: () => import('@/views/Register1/index.vue'),
+    name: 'register_step1'
+
+  },
+  {
+    path: '/register_step2',
+    component: () => import('@/views/Register2/index.vue'),
+    name: 'register_step2'
+
   },
   {
     path: '/profile',
     component: () => import('@/views/Profile/index.vue'),
     name: 'profile'
-  },
-  {
-    path: '/login2',
-    component: () => import('@/views/Login2/index.vue'),
-    name: 'login2'
   },
   {
     path: '/forgetPd',

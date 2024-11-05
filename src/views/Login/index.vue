@@ -17,7 +17,7 @@ const onSubmit = (values: Object) => {
   console.log('submit', values)
 }
 const toRegister = () => {
-  router.push('/register')
+  router.push('/register_step1')
 }
 import { LoginInfo } from '@/utils/api';
 import { showToast } from 'vant'
@@ -65,34 +65,56 @@ const changeEyeType=()=>{
 import {GetLoginCode,phoneVertify } from '@/utils/api';
 const verification = ref<string>('')
 const phone = ref<string>('')
-  const reverseN = ref<number>(3)
+  const reverseN = ref<number>(60)
   let reciprocal: any = null
 const sendCode = async (event: any) => {
   event.target.disabled = true
   const res = await phoneVertify(phone.value)
   console.log(res, '我是手机号码验证的结果')
   if (res.success) {
+
+
+    try {
+    let res = await GetLoginCode(phone.value);
+    console.log(res, '我是登录验证码');
     reciprocal = setInterval(() => {
       reverseN.value--
       if (reverseN.value < 0) {
         clearInterval(reciprocal)
         event.target.disabled = false
-        reverseN.value = 3
+        reverseN.value = 60
       }
     }, 1000)
     console.log(event.target.innerText)
-      let res=await GetLoginCode(
-      phone.value
-    )
-    console.log(res, '我是登录验证码')
+    showToast('已发送！')
+  } catch (error) {
+    showToast('获取验证码失败！')
+    // 这里可以进一步处理错误，例如显示错误信息给用户
+  }
     
   } else {
-    showToast(`${res.errorMsg}`)
+    showToast('请填写正确手机号！')
     event.target.disabled = false
   }
 
 }
 const pdType=ref('password')
+const showNum = ref(false);
+const showCode = ref(false);
+const toggleShowPhone=()=>{
+if(showCode){
+  showCode.value=false;
+  showNum.value=true;
+
+}
+}
+const toggleShowCode=()=>{
+if(showNum){
+  showNum.value=false;
+  showCode.value=true;
+
+}
+}
 </script>
 
 <template>
@@ -116,15 +138,15 @@ const pdType=ref('password')
           <van-field v-model="password" :type="pdType" name="password" placeholder='请输入密码'
             :rules="[{ required: true, message: '密码为空！'}]" />
         </van-cell-group>
-        <van-cell-group inset v-show="!loginPd">
+        <van-cell-group inset v-show="!loginPd" >
           <van-field v-model="phone" name="phone" placeholder='请输入手机号码'
-            :rules="[{ required: true, message: '手机号码为空！' }]" />
+            :rules="[{ required: true, message: '手机号码为空！' }]"  clickable @touchstart.stop="toggleShowPhone"/>
           <van-field v-model="verification"  name="verification" placeholder='请输入验证码'
-            :rules="[{ required: true, message: '验证码为空！'}]" />
+            :rules="[{ required: true, message: '验证码为空！'}]" clickable @touchstart.stop="toggleShowCode"/>
         </van-cell-group>
         <img :src="eyeIcon" alt="" id="eye" v-show="loginPd" @click="changeEyeType">
         <div id="code" v-show="!loginPd"    @click="sendCode"> {{
-              reverseN < 3 && reverseN > -1
+              reverseN < 60 && reverseN > -1
                 ? `${reverseN + 1}s之后自动获取`
                 : '获取验证码'
             }}</div>
@@ -146,7 +168,26 @@ const pdType=ref('password')
     </div>
       </van-form>
     </div>
+    <van-number-keyboard
+  :show="showNum"
+  v-model="phone"
+  :maxlength="11"
+  theme="custom"
+  extra-key="."
+  close-button-text="完成"
+  @blur="showNum = false"
 
+/>
+<van-number-keyboard
+  :show="showCode"
+  v-model="verification"
+  :maxlength="6"
+  theme="custom"
+  extra-key="."
+  close-button-text="完成"
+  @blur="showCode = false"
+
+/>
     <div class="others">
       <div class="name">————————— 其他登录方式 —————————</div>
       <div class="pic">
@@ -304,7 +345,7 @@ width:80%;
   right:0;
   background-color: 
   #F9D840;
-  width:160px;
+  padding:3px 20px 3px 20px;
   height:40px;
   text-align: center;
   line-height: 40px;

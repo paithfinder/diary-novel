@@ -95,7 +95,7 @@ const goEnter = async () => {
           <van-field v-model="phone" name="phone" placeholder="请输入您的电话号码"
             :rules="[{ required: true, message: '号码不能为空' }]" />
         </div>
-        <div id="code">
+        <!-- <div id="code">
           <van-field v-model="verification" name="verification" placeholder="填写验证码"
             :rules="[{ required: true, message: '不能为空' }]" />
           <van-button color="linear-gradient(to right, #375b7f, #33d6d6)" size="mini" style="width: 110px"
@@ -106,7 +106,7 @@ const goEnter = async () => {
                 : '获取验证码'
             }}
           </van-button>
-        </div>
+        </div> -->
       </van-cell-group>
 
       <div style="margin: 16px">
@@ -131,4 +131,5 @@ const goEnter = async () => {
     border-bottom: 1px solid #ccc;
   }
 }
+
 </style>
