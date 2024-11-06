@@ -34,15 +34,13 @@ const goHome = async () => {
     router.push('/bookshelf')
   }
 }
-const goMsg = () => {
-  router.push('/login2')
-}
+
 const resetPd = () => {
   router.push('/forgetPd')
 }
 let loginType=ref('1')
 let contentImg = computed(() => {
-  return `url(${new URL('../../assets/Login/login_content_0' + loginType.value + '_bg.png', import.meta.url).href})`;
+  return `url(${new URL(`../../assets/Login/login_content_0${loginType.value}_bg.png`, import.meta.url).href})`;
 });
 let loginPd=ref(true)
 
@@ -99,22 +97,8 @@ const sendCode = async (event: any) => {
 
 }
 const pdType=ref('password')
-const showNum = ref(false);
-const showCode = ref(false);
-const toggleShowPhone=()=>{
-if(showCode){
-  showCode.value=false;
-  showNum.value=true;
 
-}
-}
-const toggleShowCode=()=>{
-if(showNum){
-  showNum.value=false;
-  showCode.value=true;
 
-}
-}
 </script>
 
 <template>
@@ -140,9 +124,9 @@ if(showNum){
         </van-cell-group>
         <van-cell-group inset v-show="!loginPd" >
           <van-field v-model="phone" name="phone" placeholder='请输入手机号码'
-            :rules="[{ required: true, message: '手机号码为空！' }]"  clickable @touchstart.stop="toggleShowPhone"/>
+            :rules="[{ required: true, message: '手机号码为空！' }]"  type="digit" maxlength="11"/>
           <van-field v-model="verification"  name="verification" placeholder='请输入验证码'
-            :rules="[{ required: true, message: '验证码为空！'}]" clickable @touchstart.stop="toggleShowCode"/>
+            :rules="[{ required: true, message: '验证码为空！'}]" type="digit" maxlength="6"/>
         </van-cell-group>
         <img :src="eyeIcon" alt="" id="eye" v-show="loginPd" @click="changeEyeType">
         <div id="code" v-show="!loginPd"    @click="sendCode"> {{
@@ -168,26 +152,7 @@ if(showNum){
     </div>
       </van-form>
     </div>
-    <van-number-keyboard
-  :show="showNum"
-  v-model="phone"
-  :maxlength="11"
-  theme="custom"
-  extra-key="."
-  close-button-text="完成"
-  @blur="showNum = false"
 
-/>
-<van-number-keyboard
-  :show="showCode"
-  v-model="verification"
-  :maxlength="6"
-  theme="custom"
-  extra-key="."
-  close-button-text="完成"
-  @blur="showCode = false"
-
-/>
     <div class="others">
       <div class="name">————————— 其他登录方式 —————————</div>
       <div class="pic">

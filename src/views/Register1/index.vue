@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import shortMsg from '@/components/shortMsg.vue'
+import { watch } from 'vue'
 const router = useRouter()
 import {ref} from 'vue'
 const toLogin = () => {
@@ -11,9 +11,44 @@ const phone = ref<string>('')
   console.log('submit', values)
 }
 const goEnter = async () => {
-
+try{
+  const res = await GetCode(phone.value);
+  console.log(res.data, '我是获取验证码的结果');
+ showToast('验证码已发送！');
+      setTimeout(() => {
+        router.push({
+          name:'register_step2',
+          query:{
+            phone:phone.value
+          }
+        }); // 跳转到下一个路由
+    }, 2000); // 2秒后消失
+}catch(error){
+  console.error('获取验证码时发生错误:', error);
+  showToast('验证码发送失败.请重试!');
+}
 
 }
+const phone11=ref<boolean>(false)
+  watch(phone, async (oldValue, newValue) => {
+    if(phone.value.length === 11){
+        try {
+            const res = await phoneVertify(phone.value);
+            console.log(res.success, '我是电话号码验证的结果');
+            phone11.value = res.success ===true ? true : false;
+        } catch (error) {
+            console.error('验证电话号码时发生错误:', error);
+            showToast('请输入正确的手机号码!')
+        }
+    }
+});
+
+
+
+import { phoneVertify,GetCode } from '@/utils/api';
+import { showToast } from 'vant';
+import 'vant/es/toast/style'
+
 </script>
 
 <template>
@@ -24,9 +59,9 @@ const goEnter = async () => {
       <van-cell-group inset>
         <div id="phone">
           <van-field v-model="phone" name="phone" placeholder="请输入手机号码"
-            :rules="[{ required: true, message: '请输入正确的手机号码' }]" />
+            :rules="[{ required: true, message: '手机号码不能为空!' }]" type="digit" maxlength="11"/>
         </div>
-        <img src="/src/icons/Register/register_correct_icon.png" alt="" id="correctP" >
+        <img src="/src/icons/Register/register_correct_icon.png" alt="" id="correctP" v-show="phone11">
       </van-cell-group>
 
  
@@ -36,6 +71,7 @@ const goEnter = async () => {
         </van-button>
   
     </van-form>
+
     <div class="help" @click="toLogin">已有账号？<a>立即登录</a></div>
     </div>
 

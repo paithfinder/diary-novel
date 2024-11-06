@@ -11,6 +11,7 @@ if(res.success){
   router.push('/bookshelf')
 }else{
   showToast(res.errorMsg)
+  // router.push('/login')
 }
 })
 </script>

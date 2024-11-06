@@ -25,7 +25,6 @@ declare module 'vue' {
     VanFloatingBubble: typeof import('vant/es')['FloatingBubble']
     VanForm: typeof import('vant/es')['Form']
     VanIcon: typeof import('vant/es')['Icon']
-    VanNumberKeyboard: typeof import('vant/es')['NumberKeyboard']
     VanOverlay: typeof import('vant/es')['Overlay']
     VanSearch: typeof import('vant/es')['Search']
     VanSwipe: typeof import('vant/es')['Swipe']
