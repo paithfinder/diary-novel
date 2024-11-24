@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { useUserStore } from '@/stores';
 // 创建axios实例
 const request = axios.create({
   baseURL: 'http://118.31.223.211:8081/api/', // 所有的请求地址前缀部分
@@ -15,12 +16,11 @@ const request = axios.create({
 // request拦截器
 request.interceptors.request.use(
   (config) => {
-    // 如果你要去localStor获取token,(如果你有)
-    // let token = localStorage.getItem("x-auth-token");
-    // if (token) {
-    //添加请求头
-    //config.headers["Authorization"]="Bearer "+ token
-    // }
+    let token = useUserStore().user?.TOKEN
+    if (token) {
+
+    config.headers["Authorization"]=String(token).split(':')[1];
+    }
     return config
   },
   (error) => {

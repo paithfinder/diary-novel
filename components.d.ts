@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     AddBox: typeof import('./src/components/addBox.vue')['default']
     Chapter: typeof import('./src/components/chapter.vue')['default']
+    CodeInput: typeof import('./src/components/codeInput.vue')['default']
     DateBox: typeof import('./src/components/dateBox.vue')['default']
     MyItem: typeof import('./src/components/myItem.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

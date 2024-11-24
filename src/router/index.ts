@@ -48,6 +48,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'forgetPd'
   },
   {
+    path: '/newPd',
+    component: () => import('@/views/newPd/index.vue'),
+    name: 'newPd'
+  },
+  {
     path: '/curbook/:type/:bookId',
     component: () => import('@/views/CurBook/index.vue'),
     name: 'curbook'
@@ -70,10 +75,11 @@ const router = createRouter({
 // 前置导航守卫
 router.beforeEach((to, from, next) => {
   if (
-    to.path === '/register' ||
+    to.path === '/register_step1' ||
     to.path === '/login' ||
     to.path === '/profile' ||
-    to.path === '/login2'
+    to.path === '/register_step2'||
+    to.path === '/forgetPd'
   )
     return next()
   const store = useUserStore()

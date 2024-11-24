@@ -51,51 +51,13 @@ const changeLoginType=()=>{
 }
 
 
-let eyeType=ref('closed')
-let eyeIcon=computed(()=>{
-  return `${new URL(`/src/icons/Login/login_password_${eyeType.value}.png`, import.meta.url).href}`;
-})
-const changeEyeType=()=>{
-  eyeType.value=eyeType.value==='closed'?'open':'closed'
-  pdType.value=pdType.value==='password'?'text':'password'
-
-}
-import {GetLoginCode,phoneVertify } from '@/utils/api';
-const verification = ref<string>('')
-const phone = ref<string>('')
-  const reverseN = ref<number>(60)
-  let reciprocal: any = null
-const sendCode = async (event: any) => {
-  event.target.disabled = true
-  const res = await phoneVertify(phone.value)
-  console.log(res, '我是手机号码验证的结果')
-  if (res.success) {
 
 
-    try {
-    let res = await GetLoginCode(phone.value);
-    console.log(res, '我是登录验证码');
-    reciprocal = setInterval(() => {
-      reverseN.value--
-      if (reverseN.value < 0) {
-        clearInterval(reciprocal)
-        event.target.disabled = false
-        reverseN.value = 60
-      }
-    }, 1000)
-    console.log(event.target.innerText)
-    showToast('已发送！')
-  } catch (error) {
-    showToast('获取验证码失败！')
-    // 这里可以进一步处理错误，例如显示错误信息给用户
-  }
-    
-  } else {
-    showToast('请填写正确手机号！')
-    event.target.disabled = false
-  }
 
-}
+import codeInput from '@/components/codeInput.vue';
+
+
+
 const pdType=ref('password')
 
 
@@ -122,18 +84,8 @@ const pdType=ref('password')
           <van-field v-model="password" :type="pdType" name="password" placeholder='请输入密码'
             :rules="[{ required: true, message: '密码为空！'}]" />
         </van-cell-group>
-        <van-cell-group inset v-show="!loginPd" >
-          <van-field v-model="phone" name="phone" placeholder='请输入手机号码'
-            :rules="[{ required: true, message: '手机号码为空！' }]"  type="digit" maxlength="11"/>
-          <van-field v-model="verification"  name="verification" placeholder='请输入验证码'
-            :rules="[{ required: true, message: '验证码为空！'}]" type="digit" maxlength="6"/>
-        </van-cell-group>
-        <img :src="eyeIcon" alt="" id="eye" v-show="loginPd" @click="changeEyeType">
-        <div id="code" v-show="!loginPd"    @click="sendCode"> {{
-              reverseN < 60 && reverseN > -1
-                ? `${reverseN + 1}s之后自动获取`
-                : '获取验证码'
-            }}</div>
+        <codeInput  inset   :loginPd="loginPd"></codeInput>
+       
         <van-checkbox v-model="checked"  style="margin-top: 10px" icon-size="12px">
           <div  class="contact">
             我已阅读<span class="text"><a>《用户协议》</a></span> 及
@@ -288,35 +240,20 @@ top:25%;
 width:80%;
 
 }
-#forgetPd{
-  text-decoration: underline;
-  width:100%;
-  text-align: center;
-}
+
 ::v-deep .van-cell-group {
   background: transparent !important;
   margin:0 !important;
   width:100%;
   position:relative;
 }
-#eye{
-  position:absolute;
-  top:25%;
-  right:0;
-}
-#code{
-  position:absolute;
-  top:22.5%;
-  right:0;
-  background-color: 
-  #F9D840;
-  padding:3px 20px 3px 20px;
-  height:40px;
-  text-align: center;
-  line-height: 40px;
-  border-radius: 25px;
 
+#forgetPd{
+  text-decoration: underline;
+  width:100%;
+  text-align: center;
 }
+
 .contact{
   font-size:12px;
 

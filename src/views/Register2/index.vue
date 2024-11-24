@@ -38,11 +38,9 @@ const inputChange = async(value, index) => {
     // 如果当前输入框有值，并且不是最后一个输入框，则让下一个输入框获得焦点
     console.log(inputRefs.value[index + 1])
     inputRefs.value[index + 1].focus()
-  }else if(!value && index>0){
-    console.log(7777777777777777)
-    inputRefs.value[index -1].focus()
   }
 }
+
 import { RegisterIn,GetCode } from '@/utils/api';
 import {watch,computed} from 'vue'
 import { showToast } from 'vant';
@@ -92,6 +90,7 @@ const reCode=async()=>{
           <!-- 使用v-for循环numList，并为每个van-field创建ref -->
           <div v-for="(item, index) in numList" :key="item.id" id="numBox">
             <van-field v-model="item.value" type="digit" maxlength="1" @input="inputChange($event, index)"
+
                :ref="el => inputRefs[index] = el" />
           </div>
         </div>

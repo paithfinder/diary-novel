@@ -30,6 +30,10 @@ interface login2Obj {
   telNumber: string
   code: string
 }
+interface pdObj{
+  telNumber: string
+  password: string
+}
 // // post请求 ，没参数
 // export const LogoutAPI = (): Res<null> => instance.post('/admin/logout')
 
@@ -58,3 +62,12 @@ export const phoneVertify = (phoneNumber: string): any =>
   request.get(`user/judgeTel/${phoneNumber}`)
 // 验证用户名是否重复
 export const nameJudge = (name: string): any => request.get(`user/nameJudge/${name}`)
+//用户忘记密码时发送验证码
+export const GetfogetCode = (phoneNumber: string): Res<string> =>
+  request.get(`user/fogetSendCode/${phoneNumber}`)
+//重置密码
+export const ResetPd=(data:pdObj):any=>
+  request.post('user/resetPassword',data)
+//重置密码验证验证码
+export const ResetCode=(data:login2Obj):any=>
+  request.post('user/forgetVerifyCode',data)
